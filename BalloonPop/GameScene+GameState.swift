@@ -47,6 +47,10 @@ extension GameScene {
         balloonTimer?.invalidate()
         balloonTimer = nil
 
+        // Stop the difficulty progression timer
+        difficultyTimer?.invalidate()
+        difficultyTimer = nil
+
         // Remove all balloons still on screen
         // **Note**: enumerateChildNodes finds all nodes matching a condition
         // The underscore (_) ignores the stop parameter we don't need
@@ -117,6 +121,7 @@ extension GameScene {
         score = 0
         missedBalloons = 0
         isGameActive = true
+        balloonSpawnInterval = 1.0    // Reset spawn interval to initial value
 
         // Rebuild the scene exactly as we did in didMove(to:)
         // **Note**: By calling the same setup methods, we ensure the game
@@ -125,6 +130,7 @@ extension GameScene {
         setupScoreLabel()             // Score UI
         setupMissedBalloonsLabel()    // Missed balloons UI
         startSpawningBalloons()       // Start the game loop
+        startDifficultyProgression()  // Restart the difficulty progression
 
         // The game is now fully reset and ready to play again!  LFG!
     }

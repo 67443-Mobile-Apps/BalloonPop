@@ -58,12 +58,16 @@ class GameScene: SKScene {
     // The '?' makes this optional since it's nil when the game isn't active
     var balloonTimer: Timer?
 
-  
+    // Timer that increases difficulty by reducing spawn interval every 30 seconds
+    var difficultyTimer: Timer?
+
+
     // MARK: Game Configuration Constants
 
     // How often (in seconds) to spawn a new balloon
     // **Note**: TimeInterval is a typealias for Double, used for time measurements
-    let balloonSpawnInterval: TimeInterval = 1.0
+    // Changed from 'let' to 'var' to allow progressive difficulty increases
+    var balloonSpawnInterval: TimeInterval = 1.0
 
     // How long (in seconds) it takes a balloon to travel from bottom to top of screen
     // Lower values make the game harder by increasing balloon speed
@@ -76,6 +80,14 @@ class GameScene: SKScene {
     // **Note**: CGFloat is the standard type for graphics coordinates and sizes
     let balloonRadius: CGFloat = 40
     let balloonStrokeWidth: CGFloat = 2
+
+    // Difficulty progression settings
+    // How often (in seconds) to increase difficulty
+    let difficultyIncreaseInterval: TimeInterval = 15.0
+    // How much to reduce spawn interval each time (makes spawning faster)
+    let spawnIntervalDecrease: TimeInterval = 0.1
+    // Minimum spawn interval (prevents it from getting impossibly fast)
+    let minimumSpawnInterval: TimeInterval = 0.3
 
   
     // MARK: - Scene Lifecycle
@@ -93,6 +105,7 @@ class GameScene: SKScene {
         setupScoreLabel()             // Create and position the score label
         setupMissedBalloonsLabel()    // Create and position the missed balloons label
         startSpawningBalloons()       // Begin the game loop that creates balloons
+        startDifficultyProgression()  // Start the timer that increases difficulty over time
     }
 
   
@@ -148,8 +161,10 @@ class GameScene: SKScene {
      This is similar to deinit or viewWillDisappear in UIKit.
     */
     override func willMove(from view: SKView) {
-        balloonTimer?.invalidate()  // Stop the timer
-        balloonTimer = nil          // Release the reference
+        balloonTimer?.invalidate()      // Stop the balloon spawning timer
+        balloonTimer = nil              // Release the reference
+        difficultyTimer?.invalidate()   // Stop the difficulty progression timer
+        difficultyTimer = nil           // Release the reference
     }
 }
 

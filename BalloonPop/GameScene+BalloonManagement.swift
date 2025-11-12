@@ -42,6 +42,38 @@ extension GameScene {
         }
     }
 
+    /* Start the difficulty progression timer that makes the game progressively harder
+
+     **Note**: This timer runs every 30 seconds and gradually reduces the spawn interval,
+     causing balloons to appear more frequently. This creates a natural difficulty curve
+     that keeps the game engaging as players improve.
+    */
+    func startDifficultyProgression() {
+        difficultyTimer = Timer.scheduledTimer(withTimeInterval: difficultyIncreaseInterval, repeats: true) { [weak self] _ in
+            self?.increaseDifficulty()
+        }
+    }
+
+    /* Increase game difficulty by spawning balloons more frequently
+
+     **Note**: This method:
+     1. Reduces the spawn interval (but not below the minimum)
+     2. Invalidates the old timer
+     3. Creates a new timer with the faster interval
+
+     We need to recreate the timer because Timer intervals cannot be changed after creation.
+    */
+    func increaseDifficulty() {
+        // Reduce the spawn interval by the configured amount
+        balloonSpawnInterval = max(balloonSpawnInterval - spawnIntervalDecrease, minimumSpawnInterval)
+
+        // Stop the current balloon spawning timer
+        balloonTimer?.invalidate()
+
+        // Restart balloon spawning with the new, faster interval
+        startSpawningBalloons()
+    }
+
     /* Now that we have a timer, we need a method to actually create a
        new balloon node and add it to the scene with random positioning.
 

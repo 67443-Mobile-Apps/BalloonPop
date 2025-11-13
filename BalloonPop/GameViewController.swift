@@ -64,8 +64,8 @@ class GameViewController: UIViewController {
             // - showsFPS: Displays frames per second (aim for 60 FPS)
             // - showsNodeCount: Shows how many nodes are in the scene
             // Set these to false before releasing to the App Store!
-            view.showsFPS = true
-            view.showsNodeCount = true
+            view.showsFPS = false
+            view.showsNodeCount = false
         }
     }
 

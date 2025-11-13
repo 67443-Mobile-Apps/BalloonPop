@@ -98,16 +98,15 @@ extension GameScene {
         // **Note**: The nil coalescing operator (??) provides a default value if view is nil
         let safeAreaInsets = view?.safeAreaInsets ?? .zero
 
-        // Create a circular shape node for the balloon
-        // **Note**: SKShapeNode lets you draw custom shapes. Alternatives include:
-        // - SKSpriteNode for image-based sprites (better performance for many objects)
-        // - SKEffectNode for nodes with special effects
-        let balloon = SKShapeNode(circleOfRadius: balloonRadius)
+        // Create a sprite node with a randomly selected balloon image
+        // **Note**: SKSpriteNode is ideal for image-based sprites and offers better performance
+        // than SKShapeNode for many objects. We randomly select from our four balloon colors
+        let balloon = SKSpriteNode(imageNamed: randomBalloonImageName())
 
-        // Configure the balloon's appearance
-        balloon.fillColor = randomBalloonColor()    // Random color for visual variety
-        balloon.strokeColor = .white                // White outline for definition
-        balloon.lineWidth = balloonStrokeWidth      // Thickness of the outline
+        // Set the size to match the original circle balloon dimensions
+        // **Note**: balloonRadius was 40, so diameter is 80. We maintain this size for consistency
+        let balloonSize = balloonRadius * 2.5
+        balloon.size = CGSize(width: balloonSize, height: balloonSize)
 
         // Set the name property for identification during touch detection
         // **Note**: The 'name' property is SpriteKit's way of tagging nodes
@@ -121,11 +120,11 @@ extension GameScene {
            - Fallback logic for edge cases
 
            Calculate padding needed to keep balloon fully visible
-           Components: balloon radius + stroke width + safety buffer
+           Components: balloon radius + safety buffer
            **Aside**: In my first iteration of the game, many of the balloons were
            only partially visible because they were spawned too close to the edge.
          */
-        let basePadding = balloonRadius + balloonStrokeWidth + 15  // Extra 15pt safety buffer
+        let basePadding = balloonRadius + 15       // Radius plus 15pt safety buffer
         let leftPadding = basePadding + safeAreaInsets.left        // Add left safe area
         let rightPadding = basePadding + safeAreaInsets.right      // Add right safe area
 
@@ -158,6 +157,7 @@ extension GameScene {
         // Configure physics body for the balloon
         // **Note**: Even though we're not using collisions, adding a physics body
         // is good practice and allows for future expansion (e.g., balloon collisions)
+        // We use a circular body that matches the visual size of the balloon
         balloon.physicsBody = SKPhysicsBody(circleOfRadius: balloonRadius)
 
         // Physics body configuration
@@ -178,29 +178,29 @@ extension GameScene {
   
     // MARK: - Balloon Appearance
 
-    /* Return a random color for visual variety in balloons
+    /* Return a random balloon image name for visual variety in balloons
 
      **Note**: This demonstrates a couple of things related to Optionals:
      - The randomElement() method (returns Optional)
      - Nil coalescing operator (??) for providing a default value
     */
-    func randomBalloonColor() -> SKColor {
-        // Array of available balloon colors
-        // **Note**: SKColor is a typealias that works on both iOS (UIColor) and macOS (NSColor)
-        let colors: [SKColor] = [
-            .red, .blue, .green, .yellow, .orange, .purple, .systemPink, .cyan
+    func randomBalloonImageName() -> String {
+        // Array of available balloon image names
+        // **Note**: These image names must match the asset names in Assets.xcassets
+        let balloonImages = [
+            "red_balloon", "blue_balloon", "yellow_balloon", "green_balloon"
         ]
 
-        // Get a random element from the array, or default to red if array is empty
+        // Get a random element from the array, or default to red_balloon if array is empty
         // **Note**: randomElement() returns an Optional because the array could be empty
-        return colors.randomElement() ?? .red
+        return balloonImages.randomElement() ?? "red_balloon"
     }
 
   
     // MARK: - Balloon Animation
 
     /* Animate the balloon moving from bottom to top of screen
-    
+
      **Note**: This demonstrates SKAction, SpriteKit's powerful animation system.
      SKActions can be:
      - Combined in sequences (one after another)
@@ -208,7 +208,7 @@ extension GameScene {
      - Repeated, reversed, and chained in complex ways
      - Run with completion handlers for triggering game events
     */
-    func animateBalloonRise(_ balloon: SKShapeNode) {
+    func animateBalloonRise(_ balloon: SKSpriteNode) {
         // Create an action that moves the balloon to just above the screen
         // **Note**: moveTo moves to an absolute position, move(by:) is relative
         let moveUp = SKAction.moveTo(y: frame.height + 50, duration: balloonRiseSpeed)
@@ -300,14 +300,6 @@ extension GameScene {
 
         // Execute the animation sequence
         balloon.run(sequence)
-
-        /* Optional: Add sound effects for better game feel
-           **Note**: To add sound:
-           1. Add a .wav or .mp3 file to your project
-           2. Uncomment the line below and replace "pop.wav" with your filename
-           3. Sound makes games significantly more engaging!
-        */
-      
-      // run(SKAction.playSoundFileNamed("pop.wav", waitForCompletion: false))
+        run(SKAction.playSoundFileNamed("pop_sound.mp3", waitForCompletion: false))
     }
 }

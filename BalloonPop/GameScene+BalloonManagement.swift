@@ -124,7 +124,7 @@ extension GameScene {
            **Aside**: In my first iteration of the game, many of the balloons were
            only partially visible because they were spawned too close to the edge.
          */
-        let basePadding = balloonRadius + 15       // Radius plus 15pt safety buffer
+        let basePadding = balloonRadius + 15           // Radius plus 15pt safety buffer
         let leftPadding = basePadding + safeAreaInsets.left        // Add left safe area
         let rightPadding = basePadding + safeAreaInsets.right      // Add right safe area
 
@@ -213,12 +213,14 @@ extension GameScene {
         // **Note**: moveTo moves to an absolute position, move(by:) is relative
         let moveUp = SKAction.moveTo(y: frame.height + 50, duration: balloonRiseSpeed)
 
-        // Create an action that runs custom code when the animation completes
-        // **Note**: SKAction.run executes a closure, perfect for game logic triggers
-        // [weak self] prevents retain cycles (memory leaks) in the closure
-        // **Aside**: I've mentioned this several times here and in class because even though
-        // there is auto reference counting, I have been burned by this with closures;
-        // that error wasn't obvious and took some time, so I try not to repeat it. ;-)
+        /* Create an action that runs custom code when the animation completes
+           **Note**: SKAction.run executes a closure, perfect for game logic triggers
+           [weak self] prevents retain cycles (memory leaks) in the closure
+           **Aside**: I've mentioned this several times here and in class because even though
+           there is auto reference counting, I have been burned by this with closures;
+           that error wasn't obvious and took some time to track down, so
+           I try not to repeat it. ;-)
+        */
       
         let remove = SKAction.run { [weak self] in
             balloon.removeFromParent()  // Remove from scene (also removes from memory)
@@ -273,33 +275,40 @@ extension GameScene {
     */
     func popBalloon(_ balloon: SKNode) {
         // Update game state
-        score += 1
-        updateScoreLabel()
+        
+      
+      
+      
 
         // Create visual feedback animations
         // **Note**: Good games provide immediate, satisfying feedback for player actions
         // A simple scale+fade makes popping feel impactful
 
         // Scale up the balloon as it "pops"
-        let scaleUp = SKAction.scale(to: 1.5, duration: 0.1)
 
+      
+      
         // Fade out simultaneously
-        let fadeOut = SKAction.fadeOut(withDuration: 0.1)
 
+      
+      
         // Run both animations at the same time using group
         // **Note**: group vs sequence:
         // - group: all actions run simultaneously
         // - sequence: actions run one after another
-        let popAnimation = SKAction.group([scaleUp, fadeOut])
 
+      
+      
         // After the pop animation finishes, remove the balloon from the scene
-        let remove = SKAction.removeFromParent()
 
+      
+      
         // Sequence: pop animation THEN removal
-        let sequence = SKAction.sequence([popAnimation, remove])
 
-        // Execute the animation sequence
-        balloon.run(sequence)
-        run(SKAction.playSoundFileNamed("pop_sound.mp3", waitForCompletion: false))
+      
+      
+        // Execute the animation sequence (**Uncomment the two lines below when finished**)
+        // balloon.run(sequence)
+        // run(SKAction.playSoundFileNamed("pop_sound.mp3", waitForCompletion: false))
     }
 }

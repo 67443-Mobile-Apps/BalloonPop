@@ -35,33 +35,38 @@ extension GameScene {
     */
     func handleTouchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Exit early if game is not active (prevents touches during game over screen)
-        guard isGameActive else { return }
+        
+      
 
         // Get the first touch from the set
         // **Note**: iOS supports multi-touch, so touches is a Set.
         // For this game, we only care about single touches, so we get .first
-        guard let touch = touches.first else { return }
+        
+      
 
         // Convert touch location from view coordinates to scene coordinates
         // **Note**: Critical concept! Touches come in UIView coordinates,
         // but SpriteKit nodes use scene coordinates. Always convert with location(in:)
-        let location = touch.location(in: self)
+        
+      
 
         // Get all nodes at the touch location
         // **Note**: nodes(at:) returns an array of ALL nodes at that point,
         // from top to bottom (highest zPosition first). This is called "hit testing"
-        let touchedNodes = nodes(at: location)
+        
+      
 
         // Search through touched nodes to find a balloon
         // **Note**: We iterate through nodes checking the 'name' property
         // This is why we set balloon.name = "balloon" when creating balloons
-        for node in touchedNodes {
-            if node.name == "balloon" {
-                // Found a balloon! Pop it
-                popBalloon(node)
-                break  // Only pop one balloon per touch (prevents scoring multiple times)
-            }
-        }
+        
+      
+      
+      
+      
+      
+      
+      
     }
 
   

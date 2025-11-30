@@ -83,11 +83,11 @@ class GameScene: SKScene {
 
     // Difficulty progression settings
     // How often (in seconds) to increase difficulty
-    let difficultyIncreaseInterval: TimeInterval = 15.0
+    let difficultyIncreaseInterval: TimeInterval = 10.0
     // How much to reduce spawn interval each time (makes spawning faster)
     let spawnIntervalDecrease: TimeInterval = 0.1
     // Minimum spawn interval (prevents it from getting impossibly fast)
-    let minimumSpawnInterval: TimeInterval = 0.3
+    let minimumSpawnInterval: TimeInterval = 0.2
 
   
     // MARK: - Scene Lifecycle

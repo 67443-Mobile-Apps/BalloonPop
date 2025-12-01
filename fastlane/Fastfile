@@ -30,7 +30,7 @@ platform :ios do
   lane :test do
     run_tests(
       scheme: "BalloonPop",
-      devices: ["iPhone 15 Pro"]
+      devices: ["iPhone 16 Pro"]
     )
   end
 

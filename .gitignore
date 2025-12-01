@@ -48,6 +48,12 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output/
+fastlane/README.md
+
+# --- Fastlane Match ---
+# Match stores certificates in a separate git repo
+# Only ignore local decrypt password storage
+fastlane/.env.default
 
 # --- Archives ---
 # Ignore Xcode archive files.
@@ -61,6 +67,7 @@ playground.xcworkspace
 # --- Bundler ---
 # Ignore Bundler files.
 .bundle/
+Gemfile.lock
 
 # --- Simulator ---
 # Ignore simulator runtime files.

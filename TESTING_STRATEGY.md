@@ -376,6 +376,7 @@ import XCTest
 import SpriteKit
 @testable import BalloonPop
 
+@MainActor  // GameScene and SpriteKit run on the main actor (required in Swift 6)
 class GameStateTests: XCTestCase {
     var scene: GameScene!
     var view: SKView!
@@ -575,7 +576,7 @@ desc "Run all tests"
 lane :test do
   run_tests(
     scheme: "BalloonPop",
-    devices: ["iPhone 15 Pro"],
+    devices: ["iPhone 17"],
     code_coverage: true
   )
 end
@@ -584,7 +585,7 @@ desc "Run tests and generate coverage report"
 lane :test_coverage do
   run_tests(
     scheme: "BalloonPop",
-    devices: ["iPhone 15 Pro"],
+    devices: ["iPhone 17"],
     code_coverage: true
   )
 

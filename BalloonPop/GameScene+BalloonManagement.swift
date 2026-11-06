@@ -38,7 +38,11 @@ extension GameScene {
         // Without [weak self], the timer would keep the scene alive even when we want to release it.
         balloonTimer = Timer.scheduledTimer(withTimeInterval: balloonSpawnInterval, repeats: true) { [weak self] _ in
             // Optional chaining: only calls spawnBalloon if self still exists
-            self?.spawnBalloon()
+            // **Note**: Swift 6 can't prove a Timer closure runs on the main actor, but
+            // scheduledTimer fires on the main run loop, so assumeIsolated is safe here.
+            MainActor.assumeIsolated {
+                self?.spawnBalloon()
+            }
         }
     }
 
@@ -50,7 +54,9 @@ extension GameScene {
     */
     func startDifficultyProgression() {
         difficultyTimer = Timer.scheduledTimer(withTimeInterval: difficultyIncreaseInterval, repeats: true) { [weak self] _ in
-            self?.increaseDifficulty()
+            MainActor.assumeIsolated {
+                self?.increaseDifficulty()
+            }
         }
     }
 

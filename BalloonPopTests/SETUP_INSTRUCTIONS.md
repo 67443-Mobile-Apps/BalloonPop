@@ -112,6 +112,19 @@ Product → Build (Cmd+B)
 
 The `@testable` keyword gives tests access to internal types.
 
+### "Main actor-isolated property ... can not be referenced from a nonisolated context"
+
+**Fix**: Add `@MainActor` above your test class:
+```swift
+@MainActor
+class GameStateTests: XCTestCase {
+```
+
+The project uses Swift 6, which checks at compile time that code touching the UI
+runs on the main thread. `GameScene` and all SpriteKit nodes are main-actor
+isolated, so any test class that creates or inspects them must be too. New test
+files created by Xcode don't include this annotation, so you'll need to add it.
+
 ### Timers Interfering with Tests
 
 **Fix**: The `tearDown()` method invalidates timers. If issues persist:

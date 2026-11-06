@@ -18,6 +18,7 @@ import SpriteKit
 ///
 /// **Testing Pattern**: UI tests verify both initial setup and dynamic updates,
 /// ensuring labels always reflect current game state accurately.
+@MainActor
 class UITests: XCTestCase {
 
     // MARK: - Properties

@@ -18,6 +18,7 @@ import SpriteKit
 ///
 /// **Testing Pattern**: Uses AAA pattern and focuses on observable behavior
 /// rather than implementation details.
+@MainActor
 class BalloonManagementTests: XCTestCase {
 
     // MARK: - Properties

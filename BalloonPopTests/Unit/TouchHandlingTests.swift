@@ -17,6 +17,7 @@ import SpriteKit
 ///
 /// **Testing Pattern**: Since simulating actual UITouch objects is complex,
 /// we test the handler methods directly with known positions and verify behavior.
+@MainActor
 class TouchHandlingTests: XCTestCase {
 
     // MARK: - Properties
@@ -70,6 +71,7 @@ class TouchHandlingTests: XCTestCase {
     ///   - position: The position for the balloon
     ///   - name: The node name (default: "balloon")
     /// - Returns: The created balloon node
+    @discardableResult
     private func createBalloon(at position: CGPoint, name: String = "balloon") -> SKSpriteNode {
         let balloon = SKSpriteNode(imageNamed: "red_balloon")
         balloon.name = name
@@ -302,7 +304,7 @@ class TouchHandlingTests: XCTestCase {
         let initialScore = scene.score
 
         // Create balloon but don't interact with it through the proper handler
-        let balloon = createBalloon(at: CGPoint(x: 200, y: 400))
+        _ = createBalloon(at: CGPoint(x: 200, y: 400))
 
         // Act: Try to pop it directly (simulating what would happen if guard wasn't there)
         // In real scenario, handleTouchesBegan would exit early
@@ -363,7 +365,6 @@ class TouchHandlingTests: XCTestCase {
     func testRestartOnlyAvailableWhenGameInactive() {
         // Arrange: Active game
         scene.isGameActive = true
-        let initialScore = scene.score
 
         // Act: Check if restart would be processed (it shouldn't during active game)
         // The handleTouchesEnded checks !isGameActive before processing restart
@@ -406,8 +407,8 @@ class TouchHandlingTests: XCTestCase {
         scene.score = 0
         let position = CGPoint(x: 200, y: 400)
 
-        let balloon1 = createBalloon(at: position)
-        let balloon2 = createBalloon(at: position)
+        _ = createBalloon(at: position)
+        _ = createBalloon(at: position)
 
         // Act: Get balloons at position
         let touchedNodes = nodesAt(position)
@@ -430,7 +431,7 @@ class TouchHandlingTests: XCTestCase {
     func testUILabelsDoNotBlockBalloonTouches() {
         // Arrange: Create balloon at position where UI might be
         let position = CGPoint(x: scene.frame.midX, y: scene.frame.maxY - 60)
-        let balloon = createBalloon(at: position)
+        _ = createBalloon(at: position)
 
         // Score label is also at this general area
         XCTAssertNotNil(scene.scoreLabel, "Score label should exist")
@@ -453,7 +454,7 @@ class TouchHandlingTests: XCTestCase {
     func testTouchAtSceneBoundary() {
         // Arrange: Create balloon at edge
         let edgePosition = CGPoint(x: 10, y: 10)
-        let balloon = createBalloon(at: edgePosition)
+        _ = createBalloon(at: edgePosition)
 
         // Act: Touch at edge
         let touchedNodes = nodesAt(edgePosition)
@@ -573,7 +574,6 @@ class TouchHandlingTests: XCTestCase {
         XCTAssertFalse(scene.isGameActive, "Game should be over")
 
         // Try to pop balloon after game over
-        let scoreBeforeAttempt = scene.score
         scene.popBalloon(balloon)  // This would work (no guard), but handler prevents it
 
         // Assert: In real scenario, handleTouchesBegan would prevent this

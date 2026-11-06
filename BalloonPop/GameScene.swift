@@ -179,7 +179,7 @@ class GameScene: SKScene {
  This extension makes GameScene conform to SKPhysicsContactDelegate, which allows it to
  receive notifications when physics bodies collide or make contact.
 */
-extension GameScene: SKPhysicsContactDelegate {
+extension GameScene: @preconcurrency SKPhysicsContactDelegate {
 
     /* Called automatically when two physics bodies begin making contact
 

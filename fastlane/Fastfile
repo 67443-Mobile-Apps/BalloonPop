@@ -28,9 +28,14 @@ platform :ios do
 
   desc "Run tests"
   lane :test do
+    # Fully boot the simulator first; launching tests on a still-booting simulator
+    # can fail with "Busy (Application failed preflight checks)"
+    sh("xcrun simctl bootstatus 'iPhone 17' -b")
     run_tests(
       scheme: "BalloonPop",
-      devices: ["iPhone 16 Pro"]
+      devices: ["iPhone 17"],
+      # Parallel testing boots fresh simulator clones, which skips the pre-boot above
+      parallel_testing: false
     )
   end
 
@@ -45,11 +50,15 @@ platform :ios do
 
   desc "Take screenshots"
   lane :screenshots do
+    # Fully boot the simulator first; launching tests on a still-booting simulator
+    # can fail with "Busy (Application failed preflight checks)"
+    sh("xcrun simctl bootstatus 'iPhone 17' -b")
     capture_screenshots(
       scheme: "BalloonPop"
     )
   end
 
+  # To enable: Set "Versioning System" to "Apple Generic" in Xcode Build Settings; requires agvtool configuration
   desc "Increment build number"
   lane :bump_build do
     increment_build_number(
@@ -135,6 +144,15 @@ platform :ios do
 
   desc "Build and upload to TestFlight"
   lane :beta do
+    # Load API key if configured
+    if ENV["APP_STORE_CONNECT_API_KEY_PATH"]
+      api_key = app_store_connect_api_key(
+        key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+        issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+        key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"]
+      )
+    end
+
     # Sync certificates and provisioning profiles if Match is configured
     if ENV["MATCH_GIT_URL"]
       match(
@@ -142,7 +160,8 @@ platform :ios do
         type: "appstore",
         app_identifier: "net.cmuis.BalloonPop",
         username: "profh@cmu.edu",
-        readonly: true
+        readonly: true,
+        api_key: api_key
       )
     else
       UI.important("⚠️  Match not configured - using Xcode's automatic code signing")
@@ -163,6 +182,7 @@ platform :ios do
 
     # Upload to TestFlight
     upload_to_testflight(
+      api_key: api_key,
       skip_waiting_for_build_processing: true
     )
   end

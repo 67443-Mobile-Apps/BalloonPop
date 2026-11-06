@@ -17,6 +17,7 @@ import SpriteKit
 ///
 /// **Testing Pattern**: These tests follow the AAA (Arrange-Act-Assert) pattern
 /// and use descriptive test names that document expected behavior.
+@MainActor
 class GameStateTests: XCTestCase {
 
     // MARK: - Properties
